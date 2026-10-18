@@ -14,4 +14,4 @@ The source migration filenames are aligned to the version returned by remote mig
 
 The first-admin bootstrap is intentionally an operator action. Do not expose a public workspace-creation/admin-grant endpoint or rely on self-declared metadata.
 
-Provider setup is the next slice. The owner reports a HubSpot account and Twilio testing account; whether a HubSpot developer app exists is unconfirmed. Do not paste credentials in chat/issues. Establish the app distribution/platform version, OAuth redirect URL and least required scopes before implementing authorization. Twilio testing may mean trial account or test credentials; confirm which before attempting Voice SDK integration.
+Provider provisioning is implemented; see provider-setup.md. The selected development path is a working legacy HubSpot private-app token and a Twilio trial account. Do not paste credentials in chat/issues. OAuth remains a later multi-customer distribution step. Voice SDK setup, webhook signature verification and actual calling are still pending.

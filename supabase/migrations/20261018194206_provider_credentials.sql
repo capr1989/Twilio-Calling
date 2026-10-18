@@ -14,7 +14,6 @@ grant select on private.provider_credentials to service_role;
 -- No application role receives access to Vault's plaintext view.
 revoke all on vault.decrypted_secrets from public,anon,authenticated;
 revoke all on vault.secrets from public,anon,authenticated;
-revoke all on all functions in schema vault from public,anon,authenticated;
 
 create function private.stage_provider_credentials(w uuid,p text,external_id text,credentials jsonb,expected_generation integer)
 returns jsonb language plpgsql security definer set search_path='' as $$

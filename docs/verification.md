@@ -17,3 +17,12 @@ Advisor references:
 The regression also verifies that expired known-activity leases stop at eight attempts. A deployed unauthenticated GET /api/me returned HTTP 401 from the gateway. The api Edge Function is active, version 1, with verify_jwt=true; EXTENSION_ORIGINS still requires the actual extension ID before browser-origin requests can succeed.
 
 No real calls, customer imports, audio files, provider credentials, or HubSpot HTTP requests were used. No production deployment or default-branch merge occurred.
+
+## Provider credential slice
+
+- 26 JavaScript tests passed (12 foundation API + 14 provider validation/authorization/redaction tests).
+- tests/provider-credentials.sql passed and rolled back: actual Vault encryption/recovery/rotation, rep/admin/disabled-user and cross-tenant access, staging cannot mark connected, service-only validation approval, stale generation/account mismatch rejection, and secret deletion on disconnect.
+- Foundation SQL suite passed again after the credential migration.
+- scripts/connect-provider.ps1 parsed successfully with PowerShell's AST parser; its full interactive flow has not been run against real credentials.
+- Security advisor reports only intentional deny-all/no-policy private tables, including provider_credentials. Vault plaintext reads by authenticated users were tested and denied.
+- No real provider credentials have been entered; no real-provider validation, calls, number purchases, contact imports or activity writes were performed.

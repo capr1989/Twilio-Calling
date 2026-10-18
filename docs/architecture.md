@@ -12,7 +12,7 @@ Private tables have RLS with no authenticated policies by design (deny all); ser
 
 A call has one immutable workspace/rep attribution. Provider call legs have unique (workspace, connection, provider SID) and reference one call. Only a server-designated authoritative telephone leg updates logical state; parent/client legs never create duplicate logical calls. The future signed adapter must register and validate this mapping before invoking accept_call_event. The reducer accepts increasing sequence numbers, deduplicates repeated events, and protects terminal state. Inbound matching/routing and safe unknown-leg acceptance remain unimplemented.
 
-Notes/outcome edits check an expected version, lock the call, mutate it and enqueue the desired version atomically. Minimal CRM references are scoped to the same workspace and connection. Phone/email are intentionally not unique person identifiers. No raw webhook payloads or provider secrets are stored by this slice.
+Notes/outcome edits check an expected version, lock the call, mutate it and enqueue the desired version atomically. Minimal CRM references are scoped to the same workspace and connection. Phone/email are intentionally not unique person identifiers. No raw webhook payloads are stored. Provider secrets are now stored only in encrypted Vault records as described below.
 
 Jobs are unique per workspace/connection/call. claim_sync_batch serializes each connection with a settings-row lock and uses SKIP LOCKED for claims. It flushes when enough eligible jobs exist OR the oldest eligible job reaches max_wait_seconds. Default batch size is 50, default wait 900 seconds, synchronization disabled until explicitly configured. Schema bound 100 is provisional until the selected HubSpot endpoint/version is verified; no HTTP batch worker is deployed.
 
@@ -22,9 +22,9 @@ An expired create claim or explicit ambiguous response is quarantined, not blind
 
 ## Provider slice to implement next
 
-Inspect any existing HubSpot developer app before choosing its platform/API version, distribution and scopes. Prefer company-level OAuth; private distribution, marketplace distribution/listing and the extension UI location are separate choices. Contact/call APIs do not justify company/deal scopes. Batch limit, association inclusion and per-item correlation support must be confirmed against the chosen endpoints before enabling synchronization.
+The owner selected an existing legacy HubSpot private app for single-account development. Multi-customer distribution will prefer company-level OAuth; private distribution, marketplace distribution/listing and the extension UI location are separate choices. Contact/call APIs do not justify company/deal scopes. Batch limit, association inclusion and per-item correlation support must be confirmed against the chosen endpoints before enabling synchronization.
 
-Use encrypted recoverable server-side secret storage, with tenant-scoped connection generation/rotation and redaction. The present schema stores metadata only; it has no credential storage yet. Do not put per-customer secrets in the public schema or extension.
+The development provisioning slice now uses encrypted Supabase Vault records referenced from private.provider_credentials, with generation-checked rotation, administrator-only writes and disconnect cleanup. The public schema stores only metadata. A separate server-only validation approval prevents the user-facing staging RPC from activating unverified credentials. There is no secret-read API; worker retrieval remains future work. Do not put per-customer secrets in the public schema or extension.
 
 Future Edge adapters handle token issuance, OAuth and signed provider HTTP callbacks. Transactional functions own authorization and state transitions. Scheduled bounded worker invocations drain durable work; no long-lived Edge worker and no telephone audio through Supabase. No external queue infrastructure is currently necessary. Free Edge worker wall-clock duration is documented as 150 seconds; the 15–30-minute delay therefore belongs in database readiness timestamps.
 

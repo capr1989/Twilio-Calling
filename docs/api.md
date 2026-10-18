@@ -36,4 +36,12 @@ A call must live in a supported long-lived extension page/window or suitably sup
 
 ## Not yet implemented
 
-Twilio tokens/assignments; outbound intents/contact verification; incoming context endpoints; signed Twilio webhook/TwiML routes; OAuth callback; admin provider connection/sync settings/retry routes. These have no published endpoint contract yet. Do not route provider callbacks to this JSON API or call internal service-only RPCs from the extension.
+Twilio tokens/assignments; outbound intents/contact verification; incoming context endpoints; signed Twilio webhook/TwiML routes; OAuth callback; administrator sync settings/retry routes. These have no published endpoint contract yet. Do not route provider callbacks to this JSON API or call internal service-only RPCs from the extension.
+
+## Provider provisioning (implemented separately)
+
+Base: /functions/v1/providers/workspaces/:workspace/:provider, where provider is hubspot or twilio. Admin only; browser Origin headers are rejected. GET returns {connection:null|{id,provider,external_account_id,connected,generation,validated_at}} without secrets. PUT accepts {expected_generation:0,credentials:{...}}; zero is only for an absent connection. HubSpot credentials contain access_token only. Twilio credentials contain account_sid,api_key_sid,api_key_secret and optional auth_token. DELETE accepts {expected_generation:n}.
+
+PUT verifies provider credentials, stages encrypted storage as disconnected, then approves only the validated current generation using server credentials. It returns connection_id,generation,connected and nonsecret check results. GET/DELETE never retrieve secrets or call provider APIs. There is no credential-read route. Use the local setup script in docs/provider-setup.md; this is not an extension setup flow.
+
+Errors include forbidden/browser_provisioning_disabled 403, generation_conflict/connection_changed_retry 409, provider_validation_failed/contact_read_scope_required/invalid_credentials 422, and provider_rate_limited/provider_unavailable/backend_unavailable 503. No automatic retries. If PUT times out or returns 409, inspect GET status before submitting again. A failed approval leaves stored credentials disconnected. Reconnect does not start synchronization.
