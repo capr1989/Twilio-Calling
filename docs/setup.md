@@ -10,7 +10,7 @@ Confirmed destination: capr1989/Twilio-Calling. Supabase project: Twilio Calling
 6. Disable public signups in the remote Auth configuration for invitation-only onboarding. The repository config disables signup locally; it does not automatically change the hosted Auth settings. Remote signup configuration has not been changed. Even if signup is enabled, a new user has no workspace membership and no access to application data.
 7. Run database and API tests. The SQL test script rolls back all fixtures. No provider credentials are needed for these tests.
 
-The source migration filename is aligned to the version returned by remote migration history. The original file was generated with Supabase CLI; the remote migration tool assigned a later version during application, so the repository filename was aligned to avoid a pending duplicate migration on the next push.
+The source migration filenames are aligned to the version returned by remote migration history. The original files were generated with Supabase CLI; the remote migration tool assigned a later version during application, so the repository filename was aligned to avoid a pending duplicate migration on the next push.
 
 The first-admin bootstrap is intentionally an operator action. Do not expose a public workspace-creation/admin-grant endpoint or rely on self-declared metadata.
 

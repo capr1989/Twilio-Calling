@@ -123,6 +123,11 @@ do $$ declare jobs private.sync_jobs[]; j private.sync_jobs; n integer:=0; begin
  where activity_id is null;
  perform public.claim_sync_batch('20000000-0000-0000-0000-000000000001','30000000-0000-0000-0000-000000000001');
  if exists(select 1 from private.sync_jobs where activity_id is null and state<>'ambiguous') then raise exception 'lost response duplicate risk'; end if;
+ -- Expired known-activity updates stop at the retry bound.
+ update private.sync_jobs set state='leased',lease_token=gen_random_uuid(),
+ lease_until=now()-interval '1 second',attempts=8 where activity_id is not null;
+ perform public.claim_sync_batch('20000000-0000-0000-0000-000000000001','30000000-0000-0000-0000-000000000001');
+ if exists(select 1 from private.sync_jobs where activity_id is not null and state<>'failed') then raise exception 'expired updates retried without bound'; end if;
  update public.provider_connections set connected=false where provider='twilio';
  begin
   perform public.accept_call_event('20000000-0000-0000-0000-000000000001','30000000-0000-0000-0000-000000000002','synthetic-child',5,'completed',42);

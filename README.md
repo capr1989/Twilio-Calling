@@ -25,4 +25,6 @@ node --test tests/api.test.mjs
 
 Run `tests/database.sql` against an isolated migrated Supabase development database using a database-owner session. It creates synthetic fixtures inside a transaction and rolls them back. Never run fixture tests in production.
 
+The JSON API is deployed to the development project with JWT verification enabled. The actual extension origin and first administrator are not configured yet.
+
 Application code has no external npm/Deno package dependencies. Supabase CLI setup commands pin version 2.81.3; no application lockfile is needed until a dependency is introduced.
