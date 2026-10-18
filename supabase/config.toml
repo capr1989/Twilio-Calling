@@ -1,0 +1,17 @@
+project_id = "twilio-calling"
+
+[api]
+enabled = true
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[auth]
+enabled = true
+enable_signup = false
+
+[functions.api]
+verify_jwt = true
+
+[functions.providers]
+verify_jwt = true
