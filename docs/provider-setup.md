@@ -56,7 +56,7 @@ Secrets are encrypted with Supabase Vault and referenced from an unexposed priva
 
 The provisioning function accepts bearer authentication from the local administrator script and rejects browser Origin headers. User metadata is never an authorization source. An online Auth check and current enabled-admin membership check precede provider requests. Storage and trusted validation approval repeat authorization and generation checks, so directly calling the staging RPC cannot mark unverified credentials connected. Only the server-side role may approve validation. Raw provider errors, secrets and request bodies are not logged by application code or returned.
 
-Tested: 26 JavaScript tests, database credential/rotation/isolation tests with rollback, foundation SQL regression, and PowerShell syntax parsing. Real-provider validation and full interactive script execution have not been tested with your credentials. There are currently no configured users, workspaces or provider connections. Complete the steps above before attempting provider-dependent development.
+Tested: 26 JavaScript tests, database credential/rotation/isolation tests with rollback, foundation SQL regression, PowerShell syntax parsing, and mocked interactive HubSpot/Twilio setup/redaction/logout flows. Real-provider validation and script execution against the live backend have not been tested with your credentials. There are currently no configured users, workspaces or provider connections. Complete the steps above before attempting provider-dependent development.
 
 Sources checked:
 - https://supabase.com/docs/guides/database/vault

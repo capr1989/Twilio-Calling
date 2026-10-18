@@ -22,6 +22,7 @@ Start with [provider setup](docs/provider-setup.md) to create your first adminis
 
 ```sh
 node --test tests/api.test.mjs tests/providers.test.mjs
+pwsh -File tests/setup-script.test.ps1
 ```
 
 Run `tests/database.sql` and `tests/provider-credentials.sql` against an isolated migrated Supabase development database using a database-owner session. It creates synthetic fixtures inside a transaction and rolls them back. Never run fixture tests in production.

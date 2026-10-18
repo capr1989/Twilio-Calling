@@ -26,3 +26,6 @@ No real calls, customer imports, audio files, provider credentials, or HubSpot H
 - scripts/connect-provider.ps1 parsed successfully with PowerShell's AST parser; its full interactive flow has not been run against real credentials.
 - Security advisor reports only intentional deny-all/no-policy private tables, including provider_credentials. Vault plaintext reads by authenticated users were tested and denied.
 - No real provider credentials have been entered; no real-provider validation, calls, number purchases, contact imports or activity writes were performed.
+
+- The deployed providers Edge Function is active, version 1, with verify_jwt=true. A live unauthenticated request returned HTTP 401. Final fixture cleanup check found zero Auth users, workspaces and stored provider credential records.
+- Mocked interactive PowerShell HubSpot and Twilio setup flows passed, checking posted credential shapes, no secret stdout, and local sign-out. Reproduce with `pwsh -File tests/setup-script.test.ps1`; no provider requests are made by that test. The live authenticated backend path and real provider credentials remain unverified.
